@@ -11,12 +11,16 @@ env:
     - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
     - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
 
-before_install:  
-  - sudo apt-add-repository "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main"
-  - sudo apt-get update -qq
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-6
+      - g++-6
+      - cmake
 
 install: 
-  - sudo apt-get install libboost-all-dev
   - sudo apt-get install --allow-unauthenticated -qq clang++-4.0
   - export CXX="clang++-4.0"
 
