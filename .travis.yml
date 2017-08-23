@@ -11,7 +11,7 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-4.0
+    - llvm-toolchain-trusty-4.0
     packages:
     - g++-6
     - clang-4.0
@@ -21,3 +21,13 @@ install:
 
 script:
   - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && ctest -VV
+  
+###  - os: linux
+###      addons:
+###        apt:
+###          sources:
+###            - llvm-toolchain-trusty-4.0
+###          packages:
+###            - clang-4.0
+###      env:
+###        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
