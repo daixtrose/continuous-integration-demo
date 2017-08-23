@@ -20,9 +20,9 @@ addons:
       - g++-6
       - cmake
 
-install: 
-  - sudo apt-get install --allow-unauthenticated -qq clang++-4.0
-  - export CXX="clang++-4.0"
+# install: 
+#  - sudo apt-get install --allow-unauthenticated -qq clang++-4.0
+#  - export CXX="clang++-4.0"
 
 script:
     - mkdir build
