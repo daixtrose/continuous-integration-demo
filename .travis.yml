@@ -18,9 +18,6 @@ addons:
 install:
 - "[ $CXX = g++ ] && export CXX=g++-6 || true"
 - "[ $CXX = clang++ ] && export CXX=clang++-4.0 || true"
+
 script:
-  - make
-  - make test
-  
-  script:
   - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && ctest -VV
