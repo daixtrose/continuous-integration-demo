@@ -21,3 +21,6 @@ install:
 script:
   - make
   - make test
+  
+  script:
+  - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && ctest -VV
