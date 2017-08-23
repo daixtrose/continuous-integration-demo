@@ -1,33 +1,28 @@
-# Travis example for Modern C++ by Rafał Pocztarski
-# For more languages and info see:
-# https://github.com/rsp/travis-hello#readme
-
-sudo: false
 language: cpp
+sudo: required
+
+os:
+    - linux
+
 compiler:
-  - gcc
-  - clang
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-trusty-4.0
-    packages:
-    - g++-6
-    - clang-4.0
-install:
-- "[ $CXX = g++ ] && export CXX=g++-6 || true"
-- "[ $CXX = clang++ ] && export CXX=clang++-4.0 || true"
+    - clang
+
+env:
+    - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
+    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
+
+before_install:  
+  - sudo apt-add-repository "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main"
+  - sudo apt-get update -qq
+
+install: 
+  - sudo apt-get install libboost-all-dev
+  - sudo apt-get install --allow-unauthenticated -qq clang++-4.0
+  - export CXX="clang++-4.0"
 
 script:
-  - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && ctest -VV
-  
-###  - os: linux
-###      addons:
-###        apt:
-###          sources:
-###            - llvm-toolchain-trusty-4.0
-###          packages:
-###            - clang-4.0
-###      env:
-###        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+    - mkdir build
+    - cd build
+    - cmake .. -DTARGET_CPU=$TARGET_CPU -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
+    - make
+    - ctest -VV
