@@ -1,0 +1,23 @@
+# Travis example for Modern C++ by Rafał Pocztarski
+# For more languages and info see:
+# https://github.com/rsp/travis-hello#readme
+
+sudo: false
+language: cpp
+compiler:
+  - gcc
+  - clang
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-4.0
+    packages:
+    - g++-6
+    - clang-4.0
+install:
+- "[ $CXX = g++ ] && export CXX=g++-6 || true"
+- "[ $CXX = clang++ ] && export CXX=clang++-4.0 || true"
+script:
+  - make
+  - make test
