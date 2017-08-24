@@ -20,13 +20,29 @@ addons:
       - g++-6
       - cmake
 
+install:
+    - cd $CHECKOUT_PATH
+    - mkdir build
+    - cd build
+    - cmake .. -DTARGET_CPU=$TARGET_CPU -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
+    - make
+
+#     sudo apt-get purge cmake
+#     mkdir ~/temp
+#     cd ~/temp
+#     wget https://cmake.org/files/v3.9/cmake-3.9.1.tar.gz
+#     tar -xzvf cmake-3.9.1.tar.gz
+#     cd cmake-3.9.1/
+#     ./bootstrap
+#     make -j4
+#     sudo make install
+
 # install: 
 #  - sudo apt-get install --allow-unauthenticated -qq clang++-4.0
 #  - export CXX="clang++-4.0"
 
 script:
-    - mkdir build
-    - cd build
-    - cmake .. -DTARGET_CPU=$TARGET_CPU -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
-    - make
     - ctest -VV
+
+notifications:
+    email: false
