@@ -21,7 +21,7 @@ addons:
       - cmake
 
 install:
-    - cd $CHECKOUT_PATH
+#    - cd $CHECKOUT_PATH
     - mkdir build
     - cd build
     - cmake .. -DTARGET_CPU=$TARGET_CPU -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
