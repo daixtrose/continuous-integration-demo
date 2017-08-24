@@ -30,7 +30,7 @@ matrix:
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty
+            - llvm-toolchain-trusty-5.0
 
 
     # gcc-6 C++11/14/1z Debug/Release
