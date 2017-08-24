@@ -1,3 +1,5 @@
+![](https://travis-ci.org/daixtrose/travisci-demo.svg?branch=master)
+
 # travisci-demo
 A demo project using TravisCI with C++ projects
 
