@@ -1,6 +1,10 @@
 language: cpp
 sudo: required
 
+branches:
+  only: 
+    - master
+    
 os:
     - linux
 
