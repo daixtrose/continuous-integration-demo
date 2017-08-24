@@ -5,31 +5,51 @@ branches:
   only: 
     - master
 
-os:
-    - linux
+#os:
+#    - linux
 
-compiler:
-    - clang
-    - g++-6
+#compiler:
+#    - clang
+#    - g++-6
 
-env:
-    - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
-    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
+## env:
+##    - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
+##    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-6
-      - g++-6
-      - cmake
+matrix:
+  include:
+    # clang 5 C++11/14/1z Debug/Release-ASAN libc++, 11 Debug libstdc++
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On CLANG_MODULES=Off BOOST=Off
+      os: linux
+      addons: &clang5
+        apt:
+          packages:
+            - util-linux
+            - clang-5.0
+            - g++-6
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
+
+
+    # gcc-6 C++11/14/1z Debug/Release
+    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=Off BOOST=Off
+      os: linux
+      addons: &gcc6
+        apt:
+          packages:
+            - g++-6
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+
 
 install:
 #    - cd $CHECKOUT_PATH
     - mkdir build
     - cd build
-    - cmake .. -DTARGET_CPU=$TARGET_CPU -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
     - make
 
 #     sudo apt-get purge cmake
