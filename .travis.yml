@@ -44,52 +44,61 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
+before-install:
+    - export CHECKOUT_PATH=`pwd`;
+    - |
+      if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      brew update
+      brew install valgrind
+      brew install gnu-sed --with-default-names
+      brew install gnu-which --with-default-names
+      fi
+    - |
+      if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+        if [ -z "$(ls -A ${TRAVIS_BUILD_DIR}/deps/cmake/bin)" ]; then
+          CMAKE_URL="https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.tar.gz"
+          mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake && travis_retry wget --no-check-certificate --quiet -O - "${CMAKE_URL}" | tar --strip-components=1 -xz -C ${TRAVIS_BUILD_DIR}/deps/cmake
+        fi
+        export PATH="${TRAVIS_BUILD_DIR}/deps/cmake/bin:${PATH}"
+      else
+        if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
+      fi
+    - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+    - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+    - which $CXX
+    - which $CC
+    - which valgrind
+    - $CXX --version
+    - if [ "$ASAN" == "On" ]; then export SANITIZER=Address; fi
+    - if [ -n "$CLANG_VERSION" ]; then sudo PATH="${PATH}" CXX="$CXX" CC="$CC" ./install_libcxx.sh; fi
+
 
 install:
-    - if [[ -n "$CLANG_VERSION" ]]; then export CXX=clang++-$CLANG_VERSION CC=clang-$CLANG_VERSION; fi
-    - if [[ -n "$GCC_VERSION" ]]; then export CXX=g++-$GCC_VERSION CC=gcc-$GCC_VERSION; fi
-    - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-    - mkdir -p "${DEPS_DIR}" && cd "${DEPS_DIR}"
-    ############################################################################
-    # [linux]: Install the right version of libc++
-    ############################################################################
-    - |
-        if [[ -n "$CLANG_VERSION" && "${TRAVIS_OS_NAME}" == "linux" && "${STDLIB}" != "libstdc++" ]]; then
-        if [[ "$CLANG_VERSION" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
-        if [[ "$CLANG_VERSION" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
-        if [[ "$CLANG_VERSION" == "3.7" ]]; then LLVM_VERSION="3.7.1"; fi
-        if [[ "$CLANG_VERSION" == "3.8" ]]; then LLVM_VERSION="3.8.1"; fi
-        if [[ "$CLANG_VERSION" == "3.9" ]]; then LLVM_VERSION="3.9.1"; fi
-        LLVM_ROOT="${DEPS_DIR}/llvm-${LLVM_VERSION}"
-        LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
-        LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
-        LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
-        if [[ -z "$(ls -A ${LLVM_ROOT}/install/include)" ]]; then
-            mkdir -p "${LLVM_ROOT}" "${LLVM_ROOT}/build" "${LLVM_ROOT}/projects/libcxx" "${LLVM_ROOT}/projects/libcxxabi"
-            travis_retry wget --quiet -O - "${LLVM_URL}" | tar --strip-components=1 -xJ -C "${LLVM_ROOT}"
-            travis_retry wget --quiet -O - "${LIBCXX_URL}" | tar --strip-components=1 -xJ -C "${LLVM_ROOT}/projects/libcxx"
-            travis_retry wget --quiet -O - "${LIBCXXABI_URL}" | tar --strip-components=1 -xJ -C "${LLVM_ROOT}/projects/libcxxabi"
-            (cd "${LLVM_ROOT}/build" && cmake .. -DCMAKE_CXX_COMPILER="$CXX" -DCMAKE_C_COMPILER="$CC" -DCMAKE_INSTALL_PREFIX="${LLVM_ROOT}/install" -DCMAKE_BUILD_TYPE=$BUILD_TYPE)
-            (cd "${LLVM_ROOT}/build/projects/libcxx" && make install -j$JOBS)
-            (cd "${LLVM_ROOT}/build/projects/libcxxabi" && make install -j$JOBS)
-        fi
-        export CXXFLAGS="-I ${LLVM_ROOT}/install/include/c++/v1"
-        export LDFLAGS="-L ${LLVM_ROOT}/install/lib -lc++ -lc++abi"
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${LLVM_ROOT}/install/lib"
-        fi
-    - mkdir build
-    - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-    - make
+    - cd $CHECKOUT_PATH
 
-before_script:
-    - cd "${TRAVIS_BUILD_DIR}"
-    - cmake . -Bbuild -DCMAKE_CXX_COMPILER="$CXX" -DCMAKE_C_COMPILER="$CC" -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-    - cmake --build build -- -j$JOBS
+    # Workaround for valgrind bug: https://bugs.kde.org/show_bug.cgi?id=326469.
+    # It is fixed in valgrind 3.10 so this won't be necessary if someone
+    # replaces the current valgrind (3.7) with valgrind-3.10
+    - if [ "$BUILD_TYPE" == "Release" ] && [ "$ASAN" == "Off" ]; then sed -i 's/march=native/msse4.2/' CMakeLists.txt; fi
+    - mkdir -p build
+    - cd build
+    - mkdir -p build
+    - cd build
+    - if [ -n "$CLANG_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
+    - if [ -n "$GCC_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined -fno-omit-frame-pointer"; fi
+    - if [ "$GCC_VERSION" == "5" ]; then CXX_FLAGS="${CXX_FLAGS} -DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR11"; fi
+    - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
+    - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/include/c++/v1/ -Wno-unused-command-line-argument"; fi
+    - if [ "$HEADERS" == "On" ]; then NO_HEADER_CHECK=0; else NO_HEADER_CHECK=1; fi
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DRANGE_V3_NO_HEADER_CHECK=$NO_HEADER_CHECK
+    - if [ "$BOOST" == "On" ]; then cmake .. -DRANGES_BUILD_CALENDAR_EXAMPLE=On -DBOOST_ROOT=${DEPS_DIR}/boost; fi
+    - if [ "$CLANG_MODULES" == "On" ] && [ "$LIBCXX" == "On" ]; then cmake .. -DRANGES_MODULES=On -DRANGES_LIBCXX_MODULE="/usr/include/c++/v1/module.modulemap"; fi
+    - make -j2 VERBOSE=1
 
 script:
-    - cd build
-    - ctest --output-on-failure -j$JOBS
+    # Only enable valgrind for non-ASAN Release builds
+    - if [ "$BUILD_TYPE" == "Release" ] && [ "$ASAN" == "Off" ]; then CTEST_FLAGS="-D ExperimentalMemCheck"; fi
+    - ctest -j2 -VV ${CTEST_FLAGS}
 
 notifications:
     email: false
