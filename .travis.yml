@@ -4,16 +4,17 @@ sudo: required
 branches:
   only: 
     - master
-    
+
 os:
     - linux
 
 compiler:
     - clang
+    - g++-6
 
 env:
     - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
-    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
+#    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
 
 addons:
   apt:
