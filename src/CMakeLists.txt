@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.2) # Fuck you, TravisCI
+cmake_minimum_required(VERSION 3.2.2) 
 
 # target_link_libraries(travis_demo LINK_PUBLIC somelibname ${CMAKE_THREAD_LIBS_INIT})
 

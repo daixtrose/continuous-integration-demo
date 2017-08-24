@@ -9,9 +9,6 @@ find_package(Boost COMPONENTS system filesystem REQUIRED)
 add_subdirectory(src)
 add_subdirectory(test)
 
-# target_link_libraries(travis_demo LINK_PUBLIC pigpio ${CMAKE_THREAD_LIBS_INIT})
-
-    
 include_directories(include)
 
 
