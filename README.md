@@ -1,4 +1,5 @@
-![](https://travis-ci.org/daixtrose/travisci-demo.svg?branch=master)
+[![Build Status](https://travis-ci.org/daixtrose/travisci-demo.svg?branch=master)](https://travis-ci.org/daixtrose/travisci-demo)
+
 
 # travisci-demo
 A demo project using TravisCI with C++ projects
