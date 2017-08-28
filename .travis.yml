@@ -34,6 +34,7 @@ matrix:
             - ubuntu-toolchain-r-test
 
 before-install:
+    - echo "BEFORE INSTALL IS CALLED"
     - export CHECKOUT_PATH=`pwd`;
     - |
       if [ "$TRAVIS_OS_NAME" == "osx" ]; then
