@@ -5,21 +5,10 @@ branches:
   only: 
     - master
 
-#os:
-#    - linux
-
-#compiler:
-#    - clang
-#    - g++-6
-
-## env:
-##    - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
-##    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
-
 matrix:
   include:
     # clang 5 C++11/14/1z Debug/Release-ASAN libc++, 11 Debug libstdc++
-    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On CLANG_MODULES=Off BOOST=Off
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=On CLANG_MODULES=Off BOOST=Off
       os: linux
       addons: &clang5
         apt:
@@ -34,7 +23,7 @@ matrix:
 
 
     # gcc-6 C++11/14/1z Debug/Release
-    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=Off BOOST=Off
+    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=Off BOOST=Off
       os: linux
       addons: &gcc6
         apt:
