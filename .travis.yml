@@ -63,8 +63,9 @@ before-install:
 
 
 install:
+    - echo "Switching to $CHECKOUT_PATH"
+    - ls
     - cd $CHECKOUT_PATH
-
     # Workaround for valgrind bug: https://bugs.kde.org/show_bug.cgi?id=326469.
     # It is fixed in valgrind 3.10 so this won't be necessary if someone
     # replaces the current valgrind (3.7) with valgrind-3.10
