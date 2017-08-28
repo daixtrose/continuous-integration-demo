@@ -3,7 +3,7 @@ TravisCI: [![Build Status](https://travis-ci.org/daixtrose/travisci-demo.svg?bra
 # TravisCI Demo
 
 This project serves as an example for
-- how to use [Google Test](https://github.com/google/googletest) for a C++ project 
+- how to use [Google Test](https://github.com/google/googletest) for a C++14 project 
   - This repo makes use of the CMake module [DownloadProject](https://github.com/Crascit/DownloadProject) in order to download and build [Google Test](https://github.com/google/googletest) on the fly 
 - how to configure [Travis CI](https://travis-ci.org/)
   - Hint: TravisCI can additionally be [configured not to run on commits in branches](https://stackoverflow.com/questions/31882306/how-to-configure-travis-ci-to-build-pull-requests-merges-to-master-w-o-redunda) unless those are under a pull request
