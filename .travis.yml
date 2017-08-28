@@ -71,8 +71,6 @@ install:
     - if [ "$BUILD_TYPE" == "Release" ] && [ "$ASAN" == "Off" ]; then sed -i 's/march=native/msse4.2/' CMakeLists.txt; fi
     - mkdir -p build
     - cd build
-    - mkdir -p build
-    - cd build
     - if [ -n "$CLANG_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - if [ -n "$GCC_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined -fno-omit-frame-pointer"; fi
     - if [ "$GCC_VERSION" == "5" ]; then CXX_FLAGS="${CXX_FLAGS} -DRANGES_CXX_CONSTEXPR=RANGES_CXX_CONSTEXPR11"; fi
