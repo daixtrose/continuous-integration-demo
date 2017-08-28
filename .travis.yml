@@ -1,48 +1,53 @@
 language: cpp
 sudo: required
 
-os:
-    - linux
+branches:
+  only: 
+    - master
 
-compiler:
-    - clang
+matrix:
+  include:
+    # clang 5 C++11/14/1z Debug/Release-ASAN libc++, 11 Debug libstdc++
+    - env: CLANG_VERSION=5.0 BUILD_TYPE=Debug CPP=14 ASAN=On 
+      os: linux
+      addons: &clang5
+        apt:
+          packages:
+            - util-linux
+            - clang-5.0
+            - g++-6
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
 
-env:
-    - TARGET_CPU=x64 BUILD_CONFIGURATION=Debug
-    - TARGET_CPU=x64 BUILD_CONFIGURATION=Release
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-6
-      - g++-6
-      - cmake
+    # gcc-6 C++11/14/1z Debug/Release
+    - env: GCC_VERSION=6 BUILD_TYPE=Debug CPP=14 ASAN=On 
+      os: linux
+      addons: &gcc6
+        apt:
+          packages:
+            - g++-6
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
 
 install:
-#    - cd $CHECKOUT_PATH
-    - mkdir build
+    - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+    - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+    - if [ "$ASAN" == "On" ]; then export SANITIZER=Address; fi
+    - mkdir -p build
     - cd build
-    - cmake .. -DTARGET_CPU=$TARGET_CPU -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
-    - make
-
-#     sudo apt-get purge cmake
-#     mkdir ~/temp
-#     cd ~/temp
-#     wget https://cmake.org/files/v3.9/cmake-3.9.1.tar.gz
-#     tar -xzvf cmake-3.9.1.tar.gz
-#     cd cmake-3.9.1/
-#     ./bootstrap
-#     make -j4
-#     sudo make install
-
-# install: 
-#  - sudo apt-get install --allow-unauthenticated -qq clang++-4.0
-#  - export CXX="clang++-4.0"
+    - if [ -n "$CLANG_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
+    - if [ -n "$GCC_VERSION" -a "$ASAN" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined -fuse-ld=gold -fno-omit-frame-pointer"; fi
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" 
+    - make -j2 VERBOSE=1
 
 script:
-    - ctest -VV
+    # Only enable valgrind for non-ASAN Release builds
+    - if [ "$BUILD_TYPE" == "Release" ] && [ "$ASAN" == "Off" ]; then CTEST_FLAGS="-D ExperimentalMemCheck"; fi
+    - ctest -j2 -VV ${CTEST_FLAGS}
 
 notifications:
     email: false
