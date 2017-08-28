@@ -1,4 +1,4 @@
-TravisCI: [![Build Status](https://travis-ci.org/daixtrose/travisci-demo.svg?branch=master)](https://travis-ci.org/daixtrose/travisci-demo)
+TravisCI: [![Build Status](https://travis-ci.org/daixtrose/continuous-integration-demo.svg?branch=master)](https://travis-ci.org/daixtrose/continuous-integration-demo)
 
 # Continuous Integration Demo
 
@@ -21,6 +21,8 @@ git clone --bare https://github.com/daixtrose/continuous-integration-demo.git
 cd continuous-integration-demo.git
 git push --mirror https://github.com/youraccount/new-repository.git
 ```
+
+Do not forget to change the links to the build status icons on the top of `README.md`!
 
 ## Manual Usage 
 
