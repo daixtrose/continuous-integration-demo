@@ -1,40 +1,40 @@
-// This code was stolen from https://github.com/google/googletest/blob/master/googletest/docs/Primer.md and adopted
+// This code was stolen from
+// https://github.com/google/googletest/blob/master/googletest/docs/Primer.md
+// and adopted
 #include "gtest/gtest.h"
 
 #include <boost/filesystem.hpp>
 
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 class Foo {
-public: 
-    int Bar(const std::string & input_filepath, const std::string output_filepath)
-    {
-        std::cout << "I: " << input_filepath << std::endl;
-        std::cout << "O: " << output_filepath << std::endl;
-     
-        if (boost::filesystem::exists(input_filepath)
-            &&
-            boost::filesystem::exists(output_filepath))
-        {
-            return 0;
-        }
-     
-        return 1;
+ public:
+  int Bar(const std::string &input_filepath,
+          const std::string output_filepath) {
+    std::cout << "I: " << input_filepath << std::endl;
+    std::cout << "O: " << output_filepath << std::endl;
+
+    if (boost::filesystem::exists(input_filepath) &&
+        boost::filesystem::exists(output_filepath)) {
+      return 0;
     }
+
+    return 1;
+  }
 };
 
 namespace {
 
-/* 
+/*
 // In C++17, you can use string_view:
 using namespace std::string_view_literals;
 constexpr std::string_view sv = "hello, world"sv;
-*/ 
+*/
 static constexpr auto input_filepath = "myinputfile.dat";
 static constexpr auto output_filepath = "myoutputfile.dat";
-    
+
 // The fixture for testing class Foo.
 class FooTest : public ::testing::Test {
  protected:
@@ -50,16 +50,13 @@ class FooTest : public ::testing::Test {
   }
 
   virtual ~FooTest() {
-    try 
-    {
+    try {
       // You can do clean-up work that doesn't throw exceptions here.
       boost::filesystem::remove(input_filepath);
       boost::filesystem::remove(output_filepath);
-    } 
-    catch (...) 
-    {
+    } catch (...) {
       std::cerr << "Nothing to remove here." << std::endl;
-    } 
+    }
   }
 
   // If the constructor and destructor are not enough for setting up
