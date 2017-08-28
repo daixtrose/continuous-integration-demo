@@ -1,6 +1,6 @@
 TravisCI: [![Build Status](https://travis-ci.org/daixtrose/travisci-demo.svg?branch=master)](https://travis-ci.org/daixtrose/travisci-demo)
 
-# TravisCI Demo
+# Continuous Integration Demo
 
 This project serves as an example for
 - how to use [Google Test](https://github.com/google/googletest) for a C++14 project 
@@ -27,23 +27,24 @@ git push --mirror https://github.com/youraccount/new-repository.git
 Retrieve this repository:
 
 ```bash
-git clone --recursive https://github.com/daixtrose/travisci-demo
+git clone --recursive https://github.com/daixtrose/continuous-integration-demo
 cd travisci-demo/
 ``` 
-Then prepare it for a build:
 
+Then prepare it for a build:
 ```bash
 mkdir build
 cd build
 cmake ..
 ```
+
 Build it 
 
 ```bash
 make
 ```
-and test it:
 
+and test it:
 ```bash
 make test
 ```
