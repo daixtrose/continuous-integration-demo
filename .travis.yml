@@ -33,7 +33,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
-before-install:
+install:
     - echo "BEFORE INSTALL IS CALLED"
     - export CHECKOUT_PATH=`pwd`;
     - |
@@ -61,9 +61,6 @@ before-install:
     - $CXX --version
     - if [ "$ASAN" == "On" ]; then export SANITIZER=Address; fi
     - if [ -n "$CLANG_VERSION" ]; then sudo PATH="${PATH}" CXX="$CXX" CC="$CC" ./install_libcxx.sh; fi
-
-
-install:
     - echo "Switching to $CHECKOUT_PATH"
     - ls
     - cd $CHECKOUT_PATH
