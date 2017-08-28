@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.2.2)
 
 include(CTest)
 
+
 ################################################################################
 # Import Catch Test Framework 
 ################################################################################
+
+# See http://dbgit.prakinf.tu-ilmenau.de/code/pfabric/blob/dbe8dbfe21a79c00738cf7762368181edf249767/cmake/Download3rdParty.cmake
 
 include(../cmake-helper/DownloadProject/DownloadProject.cmake)
 download_project(PROJ               catch
@@ -13,12 +16,6 @@ download_project(PROJ               catch
                  UPDATE_DISCONNECTED 1
 )
 
-add_custom_command(
-  		OUTPUT ${THIRD_PARTY_DIR}/catch
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                ${Catch_SOURCE_DIR}/single_include/catch.hpp
-                ${PROJECT_SOURCE_DIR}/test)
-
 set(CATCH_INCLUDE_DIR ${catch_SOURCE_DIR}/single_include CACHE INTERNAL "Path to include folder for Catch")
 include_directories(${CATCH_INCLUDE_DIR})
 
@@ -26,7 +23,6 @@ include_directories(${CATCH_INCLUDE_DIR})
 ################################################################################
 # Define Unit Tests  
 ################################################################################
-
 
 include_directories(../include)
 
