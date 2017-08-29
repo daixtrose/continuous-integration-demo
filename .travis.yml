@@ -18,6 +18,8 @@ matrix:
             - g++-6
             - valgrind
             - libboost-dev
+            - libboost-system-dev
+            - libboost-filesystem-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-5.0
@@ -32,6 +34,8 @@ matrix:
             - g++-6
             - valgrind
             - libboost-dev
+            - libboost-system-dev
+            - libboost-filesystem-dev
           sources:
             - ubuntu-toolchain-r-test
 
