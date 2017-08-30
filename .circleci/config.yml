@@ -30,11 +30,11 @@ step-library:
         name: Install CMake 3.9.1
         command: |
           curl -sSL https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz | sudo tar -xzC /opt 
-          export PATH=/opt/cmake-3.9.1-Linux-x86_64/bin:$PATH
-          which cmake
-          echo '' >> ~/.bashrc
-          echo 'export PATH=/opt/cmake-3.9.1-Linux-x86_64/bin:$PATH' >> ~/.bashrc
-          echo $PATH
+          # export PATH=/opt/cmake-3.9.1-Linux-x86_64/bin:$PATH
+          # which cmake
+          # echo '' >> ~/.bashrc
+          # echo 'export PATH=/opt/cmake-3.9.1-Linux-x86_64/bin:$PATH' >> ~/.bashrc
+          # echo $PATH
   
   - &install-compilers-and-dependencies
       run:
@@ -85,7 +85,7 @@ jobs:
       CMAKE_C_COMPILER: clang-5
     steps:
       - *install-cmake-3-9-1
-#      - *install-compilers-and-dependencies
+      - *install-compilers-and-dependencies
       - checkout
       - *init-git-submodules
       - *execute-cmake-and-make
