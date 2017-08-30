@@ -27,14 +27,14 @@ workflows:
 step-library:
   - &save-cache
       save_cache:
-        key: 'v1/{{ .Environment.CIRCLE_JOB }}/{{ .Branch }}/{{ checksum ".circleci/config.yml" }}'
+        key: 'v1/{{ .Branch }}/{{ checksum ".circleci/config.yml" }}'
         paths: [ "~/cmake-3.9.1-Linux-x86_64" ]
 
   - &restore-cache
       restore_cache:
         keys:
-          - 'v1/{{ .Environment.CIRCLE_JOB }}/{{ .Branch }}/{{ checksum ".circleci/config.yml" }}'
-          - 'v1/{{ .Environment.CIRCLE_JOB }}/master/{{ checksum ".circleci/config.yml" }}'
+          - 'v1/{{ .Branch }}/{{ checksum ".circleci/config.yml" }}'
+          - 'v1/master/{{ checksum ".circleci/config.yml" }}'
 
   - &install-cmake-3-9-1
       run:
