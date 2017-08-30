@@ -130,6 +130,7 @@ jobs:
       CC: clang-4.0
     steps:
       - checkout
+      - *init-git-submodules
       - run:
           name: Generate compilation database
           command: |
@@ -138,7 +139,7 @@ jobs:
             mkdir build
             cd build
             cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-      - run:
+      - run:  
           name: Run Clang Tidy checks
           command: run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*'
 
