@@ -81,8 +81,8 @@ jobs:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
-      CXX: clang++5
-      CC: clang-5
+      CMAKE_CXX_COMPILER: clang++5
+      CMAKE_C_COMPILER: clang-5
     steps:
       - *install-cmake-3-9-1
 #      - *install-compilers-and-dependencies
