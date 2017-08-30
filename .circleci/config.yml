@@ -57,6 +57,7 @@ step-library:
       run:
         name: Execute CMake and Make
         command: |
+          export PATH=/opt/cmake-3.9.1-Linux-x86_64/bin:$PATH
           echo $PATH
           mkdir build
           cd build
@@ -67,6 +68,7 @@ step-library:
       run:
         name: Perform Unit tests  
         command: |
+          pwd
           ctest -VV
 
 
