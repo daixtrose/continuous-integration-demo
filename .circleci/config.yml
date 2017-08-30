@@ -133,6 +133,8 @@ jobs:
       - run:
           name: Generate compilation database
           command: |
+            pwd
+            ls 
             cd build
             cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
       - run:
