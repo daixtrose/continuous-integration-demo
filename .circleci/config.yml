@@ -76,6 +76,7 @@ jobs:
       BUILDTYPE: Debug
       CXX: clang++5
       CC: clang-5
+      BASH_ENV: ~/.bashrc
     steps:
       - run: echo 'export PATH=/opt/cmake-3.9.1-Linux-x86_64:$PATH' >> $BASH_ENV
       - *install-cmake-3-9-1
