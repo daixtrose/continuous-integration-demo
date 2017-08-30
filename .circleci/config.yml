@@ -25,6 +25,13 @@ workflows:
 
 
 step-library:
+  - &install-cmake-3-9-1
+      run:
+        name: Install CMake 3.9.1
+        command: |
+          curl -sSL https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz | sudo tar -xzC /opt 
+          export PATH="/opt/cmake-3.9.1-Linux-x86_64:$PATH"
+  
   - &install-compilers-and-dependencies
       run:
         name: Install compilers and dependencies
@@ -34,12 +41,14 @@ step-library:
           sudo apt-get update
           sudo apt-get install util-linux clang-5.0 g++-6 valgrind 
           sudo apt-get install libboost-dev libboost-system-dev libboost-filesystem-dev
+
   - &init-git-submodules
       run:
         name: Init Git submodules
         command: |
           git submodule init
           git submodule update
+
   - &execute-cmake-and-make
       run:
         name: Execute CMake and Make
@@ -48,6 +57,7 @@ step-library:
           cd build
           cmake ..
           make
+
   - &perform-unit-tests
       run:
         name: Perform Unit tests  
@@ -69,9 +79,10 @@ jobs:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
-      CXX: clang++6
-      CC: clang-6
+      CXX: clang++5
+      CC: clang-5
     steps:
+      - *install-cmake-3-9-1
       - *install-compilers-and-dependencies
       - checkout
       - *init-git-submodules
