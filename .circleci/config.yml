@@ -4,10 +4,6 @@ workflows:
   version: 2
   default:
     jobs:
-      - prepare-system
-          # filters:
-          #   branches:
-          #     only: master
       - build-with-clang-and-test
           # filters:
           #   branches:
@@ -61,18 +57,20 @@ step-library:
 
 jobs:
 # ------------------------------------------------------------------------------
-  prepare-system:
-    steps:
-      - *install-compilers-and-dependencies
+#  prepare-system:
+#    steps:
+#      - *install-compilers-and-dependencies
     
 # ------------------------------------------------------------------------------
   build-with-clang-and-test:
+    machine: true
     #working_directory: 
     environment:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
     steps:
+      - *install-compilers-and-dependencies
       - checkout
       - *init-git-submodules
       - *execute-cmake-and-make
