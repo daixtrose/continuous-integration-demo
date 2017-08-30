@@ -79,7 +79,7 @@ step-library:
   
   - &install-gcc-6
       run:
-        name: Install Gcc 6 compiler 
+        name: Install GCC 6 compiler 
         command: |
           sudo apt-get update
           sudo apt-get install g++-6
@@ -97,6 +97,8 @@ step-library:
         name: Execute CMake and Make
         command: |
           export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH
+          echo "CC = $CC"
+          echo "CXX = $CXX"
           echo $PATH
           mkdir build
           cd build
@@ -122,8 +124,8 @@ jobs:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
-      CMAKE_CXX_COMPILER: clang++5
-      CMAKE_C_COMPILER: clang-5
+      CXX: clang++5
+      CC: clang-5
     steps:
       - checkout
       # Caching does not work for directories where you need privileges, 
@@ -147,8 +149,8 @@ jobs:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
-      CMAKE_CXX_COMPILER: g++-6
-      CMAKE_C_COMPILER: gcc-6
+      CXX: g++-6
+      CC: gcc-6
     steps:
       - checkout
       - *restore-cache
