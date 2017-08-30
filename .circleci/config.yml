@@ -117,13 +117,14 @@ jobs:
       CMAKE_C_COMPILER: clang-5
     steps:
       - checkout
-      - *restore-cache
+# Caching does not work for directories where you need privileges
+#      - *restore-cache
       - *install-cmake-3-9-1
       - *add-ppa-ubuntu-toolchain-r
       - *install-valgrind-and-util-linux 
       - *install-boost
       - *install-clang-5-0
-      - *save-cache
+#      - *save-cache
       - *init-git-submodules
       - *execute-cmake-and-make
       - *perform-unit-tests
