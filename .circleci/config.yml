@@ -129,6 +129,7 @@ jobs:
       CXX: clang++-4.0
       CC: clang-4.0
     steps:
+      - *install-cmake-3-9-1
       # - run:
       #     name: Install boost libraries
       #     command: |
@@ -143,6 +144,7 @@ jobs:
       - run:
           name: Generate compilation database
           command: |
+            export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH
             pwd
             ls 
             mkdir build
