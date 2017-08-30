@@ -40,7 +40,8 @@ step-library:
       run:
         name: Install CMake 3.9.1
         command: |
-          curl -sSL https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz | sudo tar -xzC ~ 
+          test -d ~/cmake-3.9.1-Linux-x86_64 || \
+            curl -sSL https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz | sudo tar -xzC ~ 
           # TODO: find out why we cannot save our settings and restore them from there
           # export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH
           # which cmake
