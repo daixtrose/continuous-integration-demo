@@ -124,8 +124,8 @@ jobs:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
-      CXX: clang++5
-      CC: clang-5
+      CXX: clang++5.0
+      CC: clang-5.0
     steps:
       - checkout
       # Caching does not work for directories where you need privileges, 
