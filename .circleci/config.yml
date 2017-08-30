@@ -57,6 +57,7 @@ step-library:
       run:
         name: Execute CMake and Make
         command: |
+          echo $PATH
           mkdir build
           cd build
           cmake ..
