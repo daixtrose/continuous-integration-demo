@@ -69,6 +69,8 @@ step-library:
         name: Perform Unit tests  
         command: |
           pwd
+          ls
+          cd build
           ctest -VV
 
 
