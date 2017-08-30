@@ -25,6 +25,23 @@ workflows:
 
 
 step-library:
+  - &generate-cache-key
+      run:
+        name: Generate cache key
+        command: |
+          echo "$(date +"%Y-%V")" > .circle-week
+          ccache --clear
+          ccache --max-size=5G
+  - &restore-cache
+      restore_cache:
+        keys:
+          - 'v3/{{ .Environment.CIRCLE_JOB }}/{{ .Branch }}/{{ checksum ".circle-week" }}'
+          - 'v3/{{ .Environment.CIRCLE_JOB }}/master/{{ checksum ".circle-week" }}'
+  - &save-cache
+      save_cache:
+        key: 'v3/{{ .Environment.CIRCLE_JOB }}/{{ .Branch }}/{{ checksum ".circle-week" }}'
+        paths: [ "/opt/cmake-3.9.1-Linux-x86_64/bin", "/root/.ccache", "mason_packages/.binaries" ]
+
   - &install-cmake-3-9-1
       run:
         name: Install CMake 3.9.1
@@ -104,7 +121,10 @@ jobs:
       CMAKE_CXX_COMPILER: clang++5
       CMAKE_C_COMPILER: clang-5
     steps:
+      - *generate-cache-key
+      - *restore-cache
       - *install-cmake-3-9-1
+      - *save-cache
       - *add-ppa-ubuntu-toolchain-r
       - *install-valgrind-and-util-linux 
       - *install-boost
