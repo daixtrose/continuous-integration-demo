@@ -1,17 +1,79 @@
-dependencies:
-  pre:
-    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-    - sudo add-apt-repository -y 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
-    - sudo apt-get update
-    - sudo apt-get install util-linux clang-5.0 g++-6 valgrind
+version: 2
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - prepare-system
+          # filters:
+          #   branches:
+          #     only: master
+      - build-with-clang-and-test
+          # filters:
+          #   branches:
+          #     only: master
+          
+
+
+# workflows:
+#   version: 2
+#   build_and_test:
+#     jobs:
+#       - build
+#       - test:
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only: master
+
+
+step-library:
+  - &install-compilers-and-dependencies
+      run:
+        name: Install compilers and dependencies
+        command: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo add-apt-repository -y 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
+          sudo apt-get update
+          sudo apt-get install util-linux clang-5.0 g++-6 valgrind
+          libboost-dev libboost-system-dev libboost-filesystem-dev
+  - &init-git-submodules
+      run:
+        name: Init Git submodules
+        command: |
+          git submodule init
+          git submodule update
+  - &execute-cmake-and-make
+      run:
+        name: Execute CMake and Make
+        command: |
+          mkdir build
+          cd build
+          cmake ..
+          make
+  - &perform-unit-tests
+      run:
+        name: Perform Unit tests  
+        command: |
+          ctest -VV
+
+
+jobs:
+# ------------------------------------------------------------------------------
+  prepare-system:
+    steps:
+      - *install-compilers-and-dependencies
     
-  override:
-    - mkdir build; cd build; cmake ..; make
-test:
-  override:
-    - cd build
-    - ctest -VV
-checkout:
-  post:
-    - git submodule init
-    - git submodule update
+# ------------------------------------------------------------------------------
+  build-with-clang-and-test:
+    #working_directory: 
+    environment:
+      LIBSYSCONFCPUS: 4
+      JOBS: 4
+      BUILDTYPE: Debug
+    steps:
+      - checkout
+      - *init-git-submodules
+      - *execute-cmake-and-make
+      - *perform-unit-tests
