@@ -115,7 +115,27 @@ step-library:
           ctest -VV
 
 
-jobs:
+jobs:    
+# ------------------------------------------------------------------------------
+  run-clang-tidy:
+    docker:
+      - image: mbgl/ci:r4-linux-clang-4
+    working_directory: /src
+    environment:
+      LIBSYSCONFCPUS: 4
+      JOBS: 4
+      BUILDTYPE: Debug
+    steps:
+      - checkout
+      - run:
+          name: Generate compilation database
+          command: |
+            cd build
+            cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+      - run:
+          name: Run Clang Tidy checks
+          command: run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*'
+
 # ------------------------------------------------------------------------------
   build-with-clang-and-test:
     machine: true
@@ -163,3 +183,7 @@ jobs:
       - *init-git-submodules
       - *execute-cmake-and-make
       - *perform-unit-tests
+
+  
+
+
