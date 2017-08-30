@@ -71,11 +71,19 @@ step-library:
 
   - &install-clang-5-0
       run:
-        name: Install Clang 5.0 compiler together with valgrind and util-linux
+        name: Install Clang 5.0 compiler 
         command: |
           sudo add-apt-repository -y 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
           sudo apt-get update
-          sudo apt-get install util-linux clang-5.0 valgrind 
+          sudo apt-get install clang-5.0
+  
+  - &install-gcc-6
+      run:
+        name: Install Gcc 6 compiler 
+        command: |
+          sudo apt-get update
+          sudo apt-get install g++-6
+
 
   - &init-git-submodules
       run:
@@ -127,6 +135,29 @@ jobs:
       - *install-valgrind-and-util-linux 
       - *install-boost
       - *install-clang-5-0
+      - *init-git-submodules
+      - *execute-cmake-and-make
+      - *perform-unit-tests
+
+# ------------------------------------------------------------------------------
+  build-with-gcc-6-and-test:
+    machine: true
+    #working_directory: 
+    environment:
+      LIBSYSCONFCPUS: 4
+      JOBS: 4
+      BUILDTYPE: Debug
+      CMAKE_CXX_COMPILER: g++-6
+      CMAKE_C_COMPILER: gcc-6
+    steps:
+      - checkout
+      - *restore-cache
+      - *install-cmake-3-9-1
+      - *save-cache
+      - *add-ppa-ubuntu-toolchain-r
+      - *install-valgrind-and-util-linux 
+      - *install-boost
+      - *install-gcc-6
       - *init-git-submodules
       - *execute-cmake-and-make
       - *perform-unit-tests
