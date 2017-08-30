@@ -129,6 +129,7 @@ jobs:
       CXX: clang++-4.0
       CC: clang-4.0
     steps:
+      - *install-boost
       - checkout
       - *init-git-submodules
       - run:
