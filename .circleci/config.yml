@@ -130,11 +130,11 @@ jobs:
       CC: clang-4.0
     steps:
       - run:
-        name: Install boost libraries
-        command: |
-          uname -a
-          cat /etc/lsb-release
-          apt-get install libboost-dev libboost-system-dev libboost-filesystem-dev
+          name: Install boost libraries
+          command: |
+            uname -a
+            cat /etc/lsb-release
+            apt-get install libboost-dev libboost-system-dev libboost-filesystem-dev
       - checkout
       - *init-git-submodules
       - run:
