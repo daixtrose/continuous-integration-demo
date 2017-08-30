@@ -116,6 +116,7 @@ jobs:
       CMAKE_CXX_COMPILER: clang++5
       CMAKE_C_COMPILER: clang-5
     steps:
+      - checkout
       - *restore-cache
       - *install-cmake-3-9-1
       - *add-ppa-ubuntu-toolchain-r
@@ -123,7 +124,6 @@ jobs:
       - *install-boost
       - *install-clang-5-0
       - *save-cache
-      - checkout
       - *init-git-submodules
       - *execute-cmake-and-make
       - *perform-unit-tests
