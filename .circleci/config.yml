@@ -8,7 +8,7 @@ workflows:
           # filters:
           #   branches:
           #     only: master
-          
+      - build-with-gcc-6-and-test          
 
 
 # workflows:
