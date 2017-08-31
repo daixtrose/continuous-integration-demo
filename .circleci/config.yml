@@ -133,6 +133,7 @@ jobs:
       # WHy does this fail silently?
       # At least there should be an error message
       # - *init-git-submodules
+      - *install-valgrind-and-util-linux
       - run:
           name: Init Git submodules
           command: |
@@ -151,6 +152,7 @@ jobs:
           command: |
             pwd
             cd build
+            # Stolen from https://github.com/ainfosec/ci_helloworld 
             run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
             if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
                 echo "Clang Tidy still complains:"
