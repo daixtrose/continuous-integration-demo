@@ -85,7 +85,6 @@ step-library:
           sudo apt-get update
           sudo apt-get install g++-6
 
-
   - &init-git-submodules
       run:
         name: Init Git submodules
@@ -133,7 +132,7 @@ jobs:
       # WHy does this fail silently?
       # At least there should be an error message
       # - *init-git-submodules
-      - *install-valgrind-and-util-linux
+      - *init-git-submodules
       - run:
           name: Init Git submodules
           command: |
