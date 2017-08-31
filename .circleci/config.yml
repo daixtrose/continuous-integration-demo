@@ -145,7 +145,10 @@ jobs:
             cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
       - run:  
           name: Run Clang Tidy checks
-          command: run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*'
+          command: |
+            pwd
+            cd build
+            run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*'
 
 # ------------------------------------------------------------------------------
   build-with-clang-and-test:
