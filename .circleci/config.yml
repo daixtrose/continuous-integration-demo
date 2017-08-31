@@ -120,7 +120,7 @@ jobs:
 # ------------------------------------------------------------------------------
   run-clang-tidy:
     docker:
-      - image: sstrakh/xenial-boost-clang
+      - image: daixtrose/xenial-boost-gcc-clang-dev:latest
     working_directory: /src
     environment:
       LIBSYSCONFCPUS: 4
@@ -129,22 +129,10 @@ jobs:
       CXX: clang++-4.0
       CC: clang-4.0
     steps:
-      - *install-cmake-3-9-1
-      # - run:
-      #     name: Install boost libraries
-      #     command: |
-      #       uname -a
-      #       cat /etc/lsb-release
-      #       apt-get install software-properties-common
-      #       add-apt-repository ppa:ubuntu-toolchain-r/test
-      #       apt-get update
-      #       apt-get install libboost-dev libboost-system-dev libboost-filesystem-dev
       - checkout
-      - *init-git-submodules
       - run:
           name: Generate compilation database
           command: |
-            export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH
             pwd
             ls 
             mkdir build
