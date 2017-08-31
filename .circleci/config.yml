@@ -129,15 +129,7 @@ jobs:
       CC: clang-4.0
     steps:
       - checkout
-      # WHy does this fail silently?
-      # At least there should be an error message
-      # - *init-git-submodules
       - *init-git-submodules
-      - run:
-          name: Init Git submodules
-          command: |
-            git submodule init
-            git submodule update
       - run:
           name: Generate compilation database
           command: |
@@ -150,6 +142,7 @@ jobs:
           name: Run Clang Tidy checks
           command: |
             pwd
+            cd src/tidy
             # Stolen from https://github.com/ainfosec/ci_helloworld 
             run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
             if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
