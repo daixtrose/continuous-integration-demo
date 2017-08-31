@@ -130,6 +130,7 @@ jobs:
       CC: clang-4.0
     steps:
       - checkout
+      - *init-git-submodules
       - run:
           name: Generate compilation database
           command: |
