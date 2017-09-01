@@ -1,0 +1,207 @@
+version: 2
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - run-clang-tidy
+      - build-with-clang-and-test
+          # filters:
+          #   branches:
+          #     only: master
+      - build-with-gcc-6-and-test          
+
+
+# workflows:
+#   version: 2
+#   build_and_test:
+#     jobs:
+#       - build
+#       - test:
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only: master
+
+
+step-library:
+  - &save-cache
+      save_cache:
+        key: 'v1/{{ .Branch }}/{{ checksum ".circleci/config.yml" }}'
+        paths: [ "~/cmake-3.9.1-Linux-x86_64" ]
+
+  - &restore-cache
+      restore_cache:
+        keys:
+          - 'v1/{{ .Branch }}/{{ checksum ".circleci/config.yml" }}'
+          - 'v1/master/{{ checksum ".circleci/config.yml" }}'
+
+  - &install-cmake-3-9-1
+      run:
+        name: Install CMake 3.9.1
+        command: |
+          test -d ~/cmake-3.9.1-Linux-x86_64 || \
+            curl -sSL https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz | sudo tar -xzC ~ 
+          # TODO: find out why we cannot save our settings and restore them from there
+          # export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH
+          # which cmake
+          # echo '' >> ~/.bashrc
+          # echo 'export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH' >> ~/.bashrc
+          # echo $PATH
+  
+  - &add-ppa-ubuntu-toolchain-r
+      run:
+        name: Add Ubuntu Toolchain Repository
+        command: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+
+          
+  - &install-valgrind-and-util-linux 
+      run:
+        name: Install valgrind and util-linux
+        command: |
+          sudo apt-get install util-linux valgrind 
+          
+  - &install-boost
+      run:
+        name: Install boost libraries
+        command: |
+          sudo apt-get install libboost-dev libboost-system-dev libboost-filesystem-dev
+
+  - &install-clang-5-0
+      run:
+        name: Install Clang 5.0 compiler 
+        command: |
+          sudo add-apt-repository -y 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
+          sudo apt-get update
+          sudo apt-get install clang-5.0
+  
+  - &install-gcc-6
+      run:
+        name: Install GCC 6 compiler 
+        command: |
+          sudo apt-get update
+          sudo apt-get install g++-6
+
+  - &init-git-submodules
+      run:
+        name: Init Git submodules
+        command: |
+          git submodule init
+          git submodule update
+
+  - &execute-cmake-and-make
+      run:
+        name: Execute CMake and Make
+        command: |
+          export PATH=~/cmake-3.9.1-Linux-x86_64/bin:$PATH
+          echo "CC = $CC"
+          echo "CXX = $CXX"
+          echo $PATH
+          mkdir build
+          cd build
+          cmake ..
+          make
+
+  - &perform-unit-tests
+      run:
+        name: Perform Unit tests  
+        command: |
+          pwd
+          ls
+          cd build
+          ctest -VV
+
+
+jobs:    
+# ------------------------------------------------------------------------------
+  run-clang-tidy:
+    docker:
+      - image: daixtrose/xenial-boost-gcc-clang-dev:latest
+    working_directory: /src
+    environment:
+      LIBSYSCONFCPUS: 4
+      JOBS: 4
+      BUILDTYPE: Debug
+      CXX: clang++-4.0
+      CC: clang-4.0
+    steps:
+      - checkout
+      - *init-git-submodules
+      - run:
+          name: Generate compilation database
+          command: |
+            pwd
+            cd src
+            mkdir tidy
+            cd tidy
+            cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+      - run:  
+          name: Run Clang Tidy checks
+          command: |
+            pwd
+            cd src/tidy
+            # Stolen from https://github.com/ainfosec/ci_helloworld 
+            run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
+            if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
+                echo "Clang Tidy still complains:"
+                echo ""
+                grep --color -E '^|warning: |error: ' output.txt
+                exit -1;
+            else
+                echo -e "\033[1;32m\xE2\x9C\x93 passed\033[0m $1";
+            fi
+
+# ------------------------------------------------------------------------------
+  build-with-clang-and-test:
+    machine: true
+    #working_directory: 
+    environment:
+      LIBSYSCONFCPUS: 4
+      JOBS: 4
+      BUILDTYPE: Debug
+      CXX: clang++-5.0
+      CC: clang-5.0
+    steps:
+      - checkout
+      # Caching does not work for directories where you need privileges, 
+      # therefore we use it only for our local copy of CMake
+      - *restore-cache
+      - *install-cmake-3-9-1
+      - *save-cache
+      - *add-ppa-ubuntu-toolchain-r
+      - *install-valgrind-and-util-linux 
+      - *install-boost
+      - *install-clang-5-0
+      - *init-git-submodules
+      - *execute-cmake-and-make
+      - *perform-unit-tests
+
+# ------------------------------------------------------------------------------
+  build-with-gcc-6-and-test:
+    machine: true
+    #working_directory: 
+    environment:
+      LIBSYSCONFCPUS: 4
+      JOBS: 4
+      BUILDTYPE: Debug
+      CXX: g++-6
+      CC: gcc-6
+    steps:
+      - checkout
+      - *restore-cache
+      - *install-cmake-3-9-1
+      - *save-cache
+      - *add-ppa-ubuntu-toolchain-r
+      - *install-valgrind-and-util-linux 
+      - *install-boost
+      - *install-gcc-6
+      - *init-git-submodules
+      - *execute-cmake-and-make
+      - *perform-unit-tests
+
+  
+
+
