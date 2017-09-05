@@ -33,6 +33,3 @@ add_executable(some_unit_test_using_catch
     another_unit_test.cpp)
 
 add_test(NAME some_unit_test_using_catch COMMAND some_unit_test_using_catch)
-
-
-
