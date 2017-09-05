@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.2.2)
 
 include_directories(../include)
 
-add_executable (travis_demo 
+add_executable (${CMAKE_PROJECT_NAME}
     main.cpp 
 	arithmetics.cpp)
+
+install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME} DESTINATION bin)
+    
