@@ -27,16 +27,18 @@ configure_file(CMakeCPackConfig.cmake.in CMakeCPackConfig.cmake @ONLY)
 # Library search path, see https://cmake.org/Wiki/CMake_RPATH_handling
 
 # use, i.e. don't skip the full RPATH for the build tree
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+SET(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_SKIP_RPATH FALSE)
+
 # when building, don't use the install RPATH already
 # (but later on when installing)
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
+SET(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib")
+
 # add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 
 
 
@@ -48,10 +50,6 @@ message("==> CMAKE_INSTALL_RPATH = " ${CMAKE_INSTALL_RPATH})
 #    SET(CMAKE_INSTALL_RPATH "${CPACK_INSTALL_PREFIX}/lib")
 #    message("==> CMAKE_INSTALL_RPATH = " ${CMAKE_INSTALL_RPATH})
 #ENDIF("${isSystemDir}" STREQUAL "-1")
-
-
-
-
 
 
 ################################################################################
@@ -67,17 +65,11 @@ enable_testing()
 add_subdirectory(test-catch)
 add_subdirectory(test-googletest)
 
+include(${CMAKE_SOURCE_DIR}/CMakeCPack.cmake)
+
 ################################################################################
 # Additional installation files (see also install directives in subdirectories)
 install (FILES ${CMAKE_SOURCE_DIR}/README.md DESTINATION doc)
 
-set(CPACK_GENERATOR "DEB" "TGZ")
-
-# - CPack configuration for individual targets 
-set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_BINARY_DIR}/CMakeCPackConfig.cmake)
-# - CPack configuration for all targets 
-include(${CMAKE_SOURCE_DIR}/CMakeCPack.cmake)
-
-include(CPack)
 
 # https://cmake.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file

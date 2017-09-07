@@ -26,3 +26,11 @@ LIST(APPEND CPACK_SOURCE_IGNORE_FILES "cmake_install.cmake")
 LIST(APPEND CPACK_SOURCE_IGNORE_FILES "install_manifest.txt")
 LIST(APPEND CPACK_SOURCE_IGNORE_FILES "CPackConfig.cmake")
 LIST(APPEND CPACK_SOURCE_IGNORE_FILES "CPackSourceConfig.cmake")
+
+set(CPACK_GENERATOR "DEB" "TGZ")
+
+# - CPack configuration for individual targets 
+set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_BINARY_DIR}/CMakeCPackConfig.cmake)
+# - CPack configuration for all targets 
+
+include(CPack)
