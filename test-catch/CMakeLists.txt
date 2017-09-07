@@ -24,12 +24,15 @@ include_directories(${CATCH_INCLUDE_DIR})
 # Define Unit Tests  
 ################################################################################
 
-include_directories(../include)
+include_directories(../libs/arithmetics/include)
 
 add_executable(some_unit_test_using_catch 
     test_main.cpp
-    ../src/arithmetics.cpp
     some_unit_test.cpp
     another_unit_test.cpp)
+
+target_link_libraries(some_unit_test_using_catch
+    arithmetics)
+
 
 add_test(NAME some_unit_test_using_catch COMMAND some_unit_test_using_catch)
