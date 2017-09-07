@@ -23,17 +23,17 @@ add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_
 # Define Unit Tests
 ################################################################################
 
-include_directories(../include)
+include_directories(../libs/arithmetics/include)
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 add_executable(some_unit_test_using_gtest 
     test_main.cpp
-    ../src/arithmetics.cpp
     some_unit_test.cpp
     another_unit_test.cpp)
 
 target_link_libraries(some_unit_test_using_gtest 
+    arithmetics
     gtest 
     gmock_main
     ${Boost_FILESYSTEM_LIBRARY}
