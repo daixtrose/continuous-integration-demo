@@ -26,7 +26,7 @@ configure_file(CMakeCPackConfig.cmake.in CMakeCPackConfig.cmake @ONLY)
 ################################################################################
 # Library search path (see https://cmake.org/Wiki/CMake_RPATH_handling)
 
-# The trick is that setting these varaibles here is partially ignored 
+# The trick is that setting these variables here is partially ignored 
 # unless(!) you use
 #
 #    install(TARGETS ${CMAKE_PROJECT_NAME}
@@ -34,7 +34,7 @@ configure_file(CMakeCPackConfig.cmake.in CMakeCPackConfig.cmake @ONLY)
 #        LIBRARY DESTINATION lib
 #        ARCHIVE DESTINATION lib)
 #
-# within programs, e.g. in subfolders. If you use 
+# to declare what you want to isntall, e.g. in subfolders. If you use 
 #
 #    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME} DESTINATION bin)
 #
@@ -54,7 +54,7 @@ SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 #     set(CMAKE_INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib")
 # Note that
 #     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-# did not work for me for Debian packages
+# did not work for me for Debian packages, but ORIGIN is the cleanest approach (IMHO)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 
 # add the automatically determined parts of the RPATH
