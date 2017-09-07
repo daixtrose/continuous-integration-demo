@@ -59,7 +59,7 @@ set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 
 # add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
-# Note: I do not see the effect of this variabale
+# Note: I do not see the effect of this varibale
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
