@@ -5,4 +5,4 @@ include_directories(include)
 add_library(arithmetics SHARED 
     src/arithmetics.cpp)
 
-install(TARGETS arithmetics DESTINATION lib)
+#install(TARGETS arithmetics DESTINATION lib)
