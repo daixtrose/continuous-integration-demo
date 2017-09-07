@@ -24,7 +24,22 @@ set(DEB_INSTALL_PREFIX "/opt/${PROJECT_NAME}-${MAJOR_VERSION}.${MINOR_VERSION}.$
 configure_file(CMakeCPackConfig.cmake.in CMakeCPackConfig.cmake @ONLY)
 
 ################################################################################
-# Library search path, see https://cmake.org/Wiki/CMake_RPATH_handling
+# Library search path (see https://cmake.org/Wiki/CMake_RPATH_handling)
+
+# The trick is that setting these varaibles here is partially ignored 
+# unless(!) you use
+#
+#    install(TARGETS ${CMAKE_PROJECT_NAME}
+#        RUNTIME DESTINATION bin
+#        LIBRARY DESTINATION lib
+#        ARCHIVE DESTINATION lib)
+#
+# within programs, e.g. in subfolders. If you use 
+#
+#    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME} DESTINATION bin)
+#
+# you are definitely lost because then either the local version or the installed
+# version has the wrong RPATH settings, because the packaging skips RPATH manipulation.
 
 # use, i.e. don't skip the full RPATH for the build tree
 SET(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -33,20 +48,19 @@ set(CMAKE_SKIP_RPATH FALSE)
 # when building, don't use the install RPATH already
 # (but later on when installing)
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
-SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+
+# Make RPATH in installed programs relative to executable, so it is relocatable
+# This could also be 
+#     set(CMAKE_INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib")
+# Note that
+#     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+# did not work for me for Debian packages
+set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 
 # add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-message("==> CMAKE_INSTALL_RPATH = " ${CMAKE_INSTALL_RPATH})
-
-# the RPATH to be used when installing, but only if it's not a system directory
-#LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "$(prefix)/../lib" isSystemDir)
-#IF("${isSystemDir}" STREQUAL "-1")
-#    SET(CMAKE_INSTALL_RPATH "${CPACK_INSTALL_PREFIX}/lib")
-#    message("==> CMAKE_INSTALL_RPATH = " ${CMAKE_INSTALL_RPATH})
-#ENDIF("${isSystemDir}" STREQUAL "-1")
+# Note: I do not see the effect of this variabale
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
 ################################################################################
