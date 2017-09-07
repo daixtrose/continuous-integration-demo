@@ -2,3 +2,7 @@
 	path = cmake-helper/DownloadProject
 	url = https://github.com/Crascit/DownloadProject
 	branch = master
+[submodule "cmake-helper/cmake-pandocology"]
+	path = cmake-helper/cmake-pandocology
+	url = https://github.com/jeetsukumaran/cmake-pandocology
+	branch = master
