@@ -82,6 +82,18 @@ include(${CMAKE_SOURCE_DIR}/CMakeCPack.cmake)
 # Additional installation files (see also install directives in subdirectories)
 install (FILES ${CMAKE_SOURCE_DIR}/README.md DESTINATION doc)
 
- 
-
 # https://cmake.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file
+
+################################################################################
+# Pandoc
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-helper/cmake-pandocology")
+include(pandocology)
+
+add_document(
+    TARGET readme
+    OUTPUT_FILE README.html
+    SOURCES README.md
+)
+
+
