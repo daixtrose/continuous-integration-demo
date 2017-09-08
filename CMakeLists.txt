@@ -80,8 +80,7 @@ include(${CMAKE_SOURCE_DIR}/CMakeCPack.cmake)
 
 ################################################################################
 # Additional installation files (see also install directives in subdirectories)
-install (FILES ${CMAKE_SOURCE_DIR}/README.md DESTINATION doc)
-
+install(FILES ${CMAKE_SOURCE_DIR}/README.md DESTINATION doc)
  
 
 # https://cmake.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file
