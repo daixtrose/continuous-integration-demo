@@ -64,8 +64,11 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
 ################################################################################
-# Add Executable
+# Add library from subfolder
 add_subdirectory(libs/arithmetics)
+
+################################################################################
+# Add Executable
 add_subdirectory(src)
 
 ################################################################################
@@ -76,11 +79,16 @@ enable_testing()
 add_subdirectory(test-catch)
 add_subdirectory(test-googletest)
 
+################################################################################
+# Package configuration
 include(${CMAKE_SOURCE_DIR}/CMakeCPack.cmake)
 
 ################################################################################
 # Additional installation files (see also install directives in subdirectories)
 install(FILES ${CMAKE_SOURCE_DIR}/README.md DESTINATION doc)
- 
+install(EXPORT arithmetics DESTINATION lib)
+
+
 
 # https://cmake.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file
+# https://www.slideshare.net/DanielPfeifer1/cmake-48475415
