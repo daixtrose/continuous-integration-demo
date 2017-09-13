@@ -135,14 +135,14 @@ jobs:
           command: |
             pwd
             cd src
-            mkdir tidy
-            cd tidy
+            mkdir build
+            cd build
             cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
       - run:  
           name: Run Clang Tidy checks
           command: |
             pwd
-            cd src/tidy
+            cd src/build
             # Stolen from https://github.com/ainfosec/ci_helloworld 
             run-clang-tidy-5.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
             if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
