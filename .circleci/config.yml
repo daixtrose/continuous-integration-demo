@@ -134,7 +134,6 @@ jobs:
           name: Generate compilation database
           command: |
             pwd
-            cd src
             mkdir build
             cd build
             cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
@@ -142,7 +141,7 @@ jobs:
           name: Run Clang Tidy checks
           command: |
             pwd
-            cd src/build
+            cd build
             # Stolen from https://github.com/ainfosec/ci_helloworld 
             run-clang-tidy-5.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
             if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
