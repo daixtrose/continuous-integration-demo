@@ -143,7 +143,10 @@ jobs:
             pwd
             cd build
             # Stolen from https://github.com/ainfosec/ci_helloworld 
-            run-clang-tidy-5.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
+            run-clang-tidy-5.0.py -header-filter='.*' \
+              -checks='-*,cppcoreguidelines-*' \
+              $(find ../src -name *.cpp) \
+              $(find ../test* -name *.cpp) > output.txt
             if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
                 echo "Clang Tidy still complains:"
                 echo ""
