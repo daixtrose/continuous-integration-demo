@@ -1,8 +1,5 @@
-cmake_minimum_required(VERSION 3.2.2) 
-
-# target_link_libraries(travis_demo LINK_PUBLIC somelibname ${CMAKE_THREAD_LIBS_INIT})
-
-include_directories(../libs/arithmetics/include)
+# Use GNUInstallDirs to install libraries into correct locations on all platforms.
+include(GNUInstallDirs)
 
 add_executable (${CMAKE_PROJECT_NAME}
     main.cpp)
@@ -11,6 +8,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     arithmetics)
 
 INSTALL(TARGETS ${CMAKE_PROJECT_NAME}
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

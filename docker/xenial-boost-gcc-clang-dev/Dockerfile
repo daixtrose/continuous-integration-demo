@@ -17,16 +17,18 @@ RUN curl -sSL https://cmake.org/files/v3.9/cmake-3.9.1-Linux-x86_64.tar.gz | sud
 ENV PATH="/opt/cmake-3.9.1-Linux-x86_64/bin:$PATH"
 
 RUN curl http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
-    && echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main" > /etc/apt/sources.list.d/clang4.list 
+    && sudo add-apt-repository -y 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main'
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git-core
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libboost-all-dev 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y clang-4.0 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-6 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y g++-6 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y clang-tidy-4.0 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y make 
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+    && apt-get install -y \
+    gcc-6 \
+    g++-6 \
+    clang-5.0 \
+    clang-tidy-5.0 \
+    git-core \
+    libboost-all-dev \
+    llvm-5.0-dev \
+    make 
 
 RUN rm -rf /build/* \
     && rm -rf /tmp/* /var/tmp/* \

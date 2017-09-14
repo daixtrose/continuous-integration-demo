@@ -125,8 +125,8 @@ jobs:
       LIBSYSCONFCPUS: 4
       JOBS: 4
       BUILDTYPE: Debug
-      CXX: clang++-4.0
-      CC: clang-4.0
+      CXX: clang++-5.0
+      CC: clang-5.0
     steps:
       - checkout
       - *init-git-submodules
@@ -134,17 +134,19 @@ jobs:
           name: Generate compilation database
           command: |
             pwd
-            cd src
-            mkdir tidy
-            cd tidy
+            mkdir build
+            cd build
             cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
       - run:  
           name: Run Clang Tidy checks
           command: |
             pwd
-            cd src/tidy
+            cd build
             # Stolen from https://github.com/ainfosec/ci_helloworld 
-            run-clang-tidy-4.0.py -header-filter='.*' -checks='-*,cppcoreguidelines-*' > output.txt
+            run-clang-tidy-5.0.py -header-filter='.*' \
+              -checks='-*,cppcoreguidelines-*' \
+              $(find ../src -name *.cpp) \
+              $(find ../test* -name *.cpp) > output.txt
             if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
                 echo "Clang Tidy still complains:"
                 echo ""
