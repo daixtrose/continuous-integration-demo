@@ -4,7 +4,6 @@ CircleCI: [![Circle CI Build Status](https://circleci.com/gh/daixtrose/continuou
 ![](https://img.shields.io/github/license/daixtrose/continuous-integration-demo.svg) 
 ![](https://img.shields.io/github/forks/daixtrose/continuous-integration-demo.svg)
 ![](https://img.shields.io/github/stars/daixtrose/continuous-integration-demo.svg)
-![](https://img.shields.io/github/license/daixtrose/continuous-integration-demo.svg)
 ![](https://img.shields.io/twitter/url/https/github.com/daixtrose/continuous-integration-demo.svg?style=social)
 
 
