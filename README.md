@@ -1,6 +1,5 @@
 TravisCI: [![Travis CI Build Status](https://travis-ci.org/daixtrose/continuous-integration-demo.svg?branch=master)](https://travis-ci.org/daixtrose/continuous-integration-demo)
 CircleCI: [![Circle CI Build Status](https://circleci.com/gh/daixtrose/continuous-integration-demo.png?circle-token=:circle-token)](https://circleci.com/gh/daixtrose/continuous-integration-demo)
-
 ![](https://img.shields.io/github/license/daixtrose/continuous-integration-demo.svg) 
 ![](https://img.shields.io/github/forks/daixtrose/continuous-integration-demo.svg)
 ![](https://img.shields.io/github/stars/daixtrose/continuous-integration-demo.svg)
