@@ -37,7 +37,7 @@ Do not forget to change the links to the build status icons on the top of `READM
 
 ```bash
 git clone --recursive https://github.com/daixtrose/continuous-integration-demo
-cd travisci-demo/
+cd continuous-integration-demo
 ``` 
 ### Prepare for a build
 
