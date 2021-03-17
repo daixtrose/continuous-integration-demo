@@ -1,3 +1,7 @@
+***THIS REPO IS COMPLETELY OUT OF DATE AND REFLECTS MY KNOWLEGDE ABOUT CMAKE FROM SOME YEARS AGO***
+
+> Please read [Craig Scott's "Professional CMake: A Practical Guide"](https://crascit.com/) instead of trying to find answers here.
+
 TravisCI: [![Travis CI Build Status](https://travis-ci.org/daixtrose/continuous-integration-demo.svg?branch=master)](https://travis-ci.org/daixtrose/continuous-integration-demo)
 CircleCI: [![Circle CI Build Status](https://circleci.com/gh/daixtrose/continuous-integration-demo.png?circle-token=:circle-token)](https://circleci.com/gh/daixtrose/continuous-integration-demo)
 ![](https://img.shields.io/github/license/daixtrose/continuous-integration-demo.svg) 
